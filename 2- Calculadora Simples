@@ -1,0 +1,132 @@
+XML:
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/calcUm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:autofillHints=""
+        android:hint="Primeiro Número"
+        android:inputType="numberDecimal"
+        tools:ignore="HardcodedText,MissingConstraints,TouchTargetSizeCheck,TextContrastCheck,VisualLintTextFieldSize"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <EditText
+        android:id="@+id/calcDois"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calcUm"
+        android:layout_margin="16dp"
+        android:hint="Segundo Número"
+        android:inputType="numberDecimal"
+        tools:ignore="Autofill,HardcodedText,MissingConstraints,TouchTargetSizeCheck,TextContrastCheck,VisualLintTextFieldSize"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="104dp" />
+
+    <Button
+        android:id="@+id/btnSoma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calcDois"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:text="Somar"
+        tools:ignore="HardcodedText,MissingConstraints"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="189dp" />
+
+    <Button
+        android:id="@+id/btnSub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calcDois"
+        android:layout_margin="16dp"
+        android:layout_toEndOf="@id/btnSoma"
+        android:text="Subtrair"
+        tools:layout_editor_absoluteX="296dp"
+        tools:layout_editor_absoluteY="189dp"
+        tools:ignore="HardcodedText,MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txtResultado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSoma"
+        android:layout_margin="16dp"
+        android:text="Resultado"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="165dp"
+        tools:layout_editor_absoluteY="274dp"
+        tools:ignore="HardcodedText,MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+---------------------------------------
+
+package br.unipar.calculadorasimples
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class MainActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n", "MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        
+        val calculoUm = findViewById<EditText>(R.id.calcUm)
+        val calculoDois = findViewById<EditText>(R.id.calcDois)
+        val botaoSoma = findViewById<Button>(R.id.btnSoma)
+        val botaoSub = findViewById<Button>(R.id.btnSub)
+        val resultado = findViewById<TextView>(R.id.txtResultado)
+
+        botaoSoma.setOnClickListener {
+            
+            val somaUm = calculoUm.text.toString()
+            val somaDois = calculoDois.text.toString()
+
+            if (somaUm.isNotEmpty() && somaDois.isNotEmpty()) {
+                val resultadoSoma = somaUm.toDouble() + somaDois.toDouble()
+                resultado.text = resultadoSoma.toString()
+            } else {
+                resultado.text = "Informe os valores:"
+            }
+        }
+
+        botaoSub.setOnClickListener {
+            
+            val subtUm = calculoUm.text.toString()
+            val subtDois = calculoDois.text.toString()
+
+            if (subtUm.isNotEmpty() && subtDois.isNotEmpty()) {
+                val resultadoSub = subtUm.toDouble() - subtDois.toDouble()
+                resultado.text = resultadoSub.toString()
+            } else {
+                resultado.text = "Informe os valores:"
+            }
+        }
+
+    }
+}
