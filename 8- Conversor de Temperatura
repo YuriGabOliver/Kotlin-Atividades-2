@@ -1,0 +1,151 @@
+XML:
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Insira a temperatura:"
+            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/editTemperatura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite a temperatura"
+            android:inputType="numberDecimal"
+            tools:ignore="Autofill,HardcodedText,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <RadioButton
+                android:id="@+id/rbCelsiusParaFahrenheit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Celsius para Fahrenheit"
+                tools:ignore="HardcodedText" />
+
+            <RadioButton
+                android:id="@+id/rbFahrenheitParaCelsius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fahrenheit para Celsius"
+                tools:ignore="HardcodedText" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnConverter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Converter"
+            android:layout_marginTop="16dp"
+            tools:ignore="HardcodedText,VisualLintButtonSize" />
+
+        <TextView
+            android:id="@+id/txtResultado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/btnLimpar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Limpar"
+            android:layout_marginTop="16dp"
+            tools:ignore="HardcodedText,VisualLintButtonSize" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+----------------------------------------
+
+package com.example.conversortemperatura
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class MainActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        val inputTemp = findViewById<EditText>(R.id.editTemperatura)
+        val celsius = findViewById<RadioButton>(R.id.rbCelsiusParaFahrenheit)
+        val fahr = findViewById<RadioButton>(R.id.rbFahrenheitParaCelsius)
+        val btnConverter = findViewById<Button>(R.id.btnConverter)
+        val txtResultado = findViewById<TextView>(R.id.txtResultado)
+        val btnLimpar = findViewById<Button>(R.id.btnLimpar)
+
+        btnConverter.setOnClickListener {
+            val temperatura = inputTemp.text.toString()
+
+            if (temperatura.isNotEmpty()) {
+                val temp = temperatura.toDouble()
+
+                val resultado = when {
+                    celsius.isChecked -> {
+                        (temp * 9 / 5) + 32
+                    }
+
+                    fahr.isChecked -> {
+                        (temp - 32) * 5 / 9
+                    }
+
+                    else -> null
+                }
+
+                if (resultado != null) {
+                    txtResultado.text = "Resultado: %.2f".format(resultado)
+
+                }else{
+                    txtResultado.text = "Selecione uma opção."
+                }
+
+                }else{
+                    txtResultado.text = "Insira a temperatura!!!."
+            }
+        }
+
+        btnLimpar.setOnClickListener {
+            inputTemp.setText("")
+            txtResultado.text = ""
+        }
+    }
+}
